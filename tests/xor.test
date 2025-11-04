@@ -1,0 +1,111 @@
+# xor.test --
+#
+# Tests for the xor command
+
+if {"::tcltest" ni [namespace children]} {
+    package require tcltest
+}
+namespace import ::tcltest::*
+
+package require Performance
+
+test xor-1.1 {Simple xor operation} -body {
+    binary encode hex [xor "Hello" "key"]
+} -result 230015070a
+
+test xor-1.2 {xor with single byte key} -body {
+    binary encode hex [xor "test" "a"]
+} -result 15041215
+
+test xor-1.3 {xor with longer key} -body {
+    binary encode hex [xor "test" "verylongkey"]
+} -result 0200010d
+
+test xor-1.4 {xor with empty string} -body {
+    binary encode hex [xor "" "key"]
+} -result {}
+
+test xor-1.5 {xor with single character} -body {
+    binary encode hex [xor "a" "k"]
+} -result 0a
+
+test xor-2.1 {xor round-trip test - simple} -body {
+    set original "Hello World"
+    set key "secret"
+    set encrypted [xor $original $key]
+    set decrypted [xor $encrypted $key]
+    expr {$original eq $decrypted}
+} -result 1
+
+test xor-2.2 {xor round-trip test - with special characters} -body {
+    set original "Test\nWith\tSpecial\rChars"
+    set key "password123"
+    set encrypted [xor $original $key]
+    set decrypted [xor $encrypted $key]
+    expr {$original eq $decrypted}
+} -result 1
+
+test xor-2.3 {xor round-trip test - with unicode} -body {
+    # Use encoding to handle unicode properly
+    set original [encoding convertto utf-8 "Hello World"]
+    set key "key"
+    set encrypted [xor $original $key]
+    set decrypted [xor $encrypted $key]
+    expr {$original eq $decrypted}
+} -result 1
+
+test xor-2.4 {xor round-trip test - with binary data} -body {
+    set original [binary format c* {0 1 2 3 255 254 253}]
+    set key "binary"
+    set encrypted [xor $original $key]
+    set decrypted [xor $encrypted $key]
+    expr {$original eq $decrypted}
+} -result 1
+
+test xor-3.1 {xor with repeating key - verify key repeats} -body {
+    set text "AAAAAAAAAA"
+    set key "XY"
+    binary encode hex [xor $text $key]
+} -result 19181918191819181918
+
+test xor-3.2 {xor with key longer than text} -body {
+    set text "Hi"
+    set key "verylongpassword"
+    binary encode hex [xor $text $key]
+} -result 3e0c
+
+test xor-3.3 {xor commutativity - xor(A,B) different from xor(B,A) when lengths differ} -body {
+    set result1 [binary encode hex [xor "short" "muchlongerkey"]]
+    set result2 [binary encode hex [xor "muchlongerkey" "short"]]
+    # They should be different length results
+    list [expr {[string length $result1] != [string length $result2]}] $result1 $result2
+} -result {1 1e1d0c1a18 1e1d0c1a181c06081706180d16}
+
+test xor-4.1 {xor idempotence - xor twice returns original} -body {
+    set original "Test data"
+    set key "password"
+    set result [xor [xor $original $key] $key]
+    expr {$original eq $result}
+} -result 1
+
+test xor-4.2 {xor with same string as key and text} -body {
+    set text "same"
+    binary encode hex [xor $text $text]
+} -result 00000000
+
+test xor-4.3 {xor associativity - not applicable, test XOR properties} -body {
+    # A XOR B XOR B = A
+    set original "data"
+    set key1 "key1"
+    set key2 "key2"
+    set step1 [xor $original $key1]
+    set step2 [xor $step1 $key2]
+    set step3 [xor $step2 $key2]
+    set step4 [xor $step3 $key1]
+    expr {$original eq $step4}
+} -result 1
+
+::tcltest::cleanupTests
+return
+
+# vim: ft=tcl ts=4 shiftwidth=4
