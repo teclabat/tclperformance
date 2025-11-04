@@ -1,0 +1,113 @@
+'\"
+'\" Performance package manual page
+'\"
+.TH performance n 0.1 Performance "Performance Extension"
+.so man.macros
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+performance \- High-performance XOR cipher operations
+.SH SYNOPSIS
+.nf
+\fBpackage require Performance ?0.1?\fR
+
+\fBxor\fR \fIdata\fR \fIkey\fR
+.fi
+.BE
+.SH DESCRIPTION
+.PP
+The \fBPerformance\fR package provides high-performance cryptographic operations
+implemented in C for speed. Currently it implements XOR cipher operations for
+simple encryption and obfuscation of binary data.
+.SH COMMANDS
+.TP
+\fBxor\fR \fIdata\fR \fIkey\fR
+Performs an XOR operation on \fIdata\fR using \fIkey\fR. The operation XORs
+each byte of \fIdata\fR with the corresponding byte of \fIkey\fR. If \fIkey\fR
+is shorter than \fIdata\fR, it is repeated cyclically. Both \fIdata\fR and
+\fIkey\fR are treated as binary data (byte arrays).
+.RS
+.PP
+The XOR operation is symmetric, meaning that applying it twice with the same
+key returns the original data:
+.CS
+set original "secret message"
+set encrypted [xor $original "password"]
+set decrypted [xor $encrypted "password"]
+# $decrypted equals $original
+.CE
+.PP
+Returns the XOR result as a binary value (byte array).
+.RE
+.SH EXAMPLES
+.PP
+Basic XOR encryption and decryption:
+.CS
+package require Performance
+
+# Encrypt a string
+set plaintext "Hello World"
+set key "secret"
+set encrypted [xor $plaintext $key]
+puts "Encrypted: [binary encode hex $encrypted]"
+
+# Decrypt back to original
+set decrypted [xor $encrypted $key]
+puts "Decrypted: $decrypted"
+.CE
+.PP
+Working with binary data:
+.CS
+# Read binary file
+set fd [open "data.bin" rb]
+set data [read $fd]
+close $fd
+
+# XOR encrypt the data
+set key "encryption_key"
+set encrypted [xor $data $key]
+
+# Write encrypted data
+set fd [open "data.enc" wb]
+puts -nonewline $fd $encrypted
+close $fd
+.CE
+.PP
+Using short keys (key repeats cyclically):
+.CS
+set data "AAAAAAAAAA"
+set key "XY"
+set result [xor $data $key]
+# Each byte alternates between A XOR X and A XOR Y
+.CE
+.SH "SECURITY CONSIDERATIONS"
+.PP
+The XOR cipher is \fBnot cryptographically secure\fR and should not be used
+for serious encryption. It is suitable for:
+.IP \(bu 3
+Simple obfuscation of data
+.IP \(bu 3
+Checksums and data integrity checks
+.IP \(bu 3
+Educational purposes
+.IP \(bu 3
+Performance testing
+.PP
+For secure encryption, use proper cryptographic libraries like:
+.IP \(bu 3
+\fBtcltls\fR for TLS/SSL
+.IP \(bu 3
+\fBTcllib's aes\fR module for AES encryption
+.IP \(bu 3
+External tools like OpenSSL
+.SH "SEE ALSO"
+binary(n), encoding(n), tcltls(n)
+.SH KEYWORDS
+xor, encryption, cipher, binary, performance
+.SH COPYRIGHT
+.nf
+Copyright (c) 2025
+.fi
+'\" Local Variables:
+'\" mode: nroff
+'\" End:
