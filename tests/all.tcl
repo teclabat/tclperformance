@@ -9,7 +9,7 @@
 
 package require tcltest
 ::tcltest::loadTestedCommands
-package require tclperformance
+package require performance
 
 set ::tcltest::testSingleFile false
 set ::tcltest::testsDirectory [file dir [info script]]
@@ -36,7 +36,7 @@ if {[llength $::tcltest::matchFiles] > 0} {
 set timeCmd {clock format [clock seconds]}
 puts stdout "Tests began at [eval $timeCmd]"
 
-puts stdout "tclperformance [package provide tclperformance]"
+puts stdout "performance [package provide performance]"
 
 # Source each of the specified tests
 foreach file [lsort [::tcltest::getMatchingFiles]] {

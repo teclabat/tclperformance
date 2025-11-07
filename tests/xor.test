@@ -7,7 +7,7 @@ if {"::tcltest" ni [namespace children]} {
 }
 namespace import ::tcltest::*
 
-package require tclperformance
+package require performance
 
 test xor-1.1 {Simple xor operation} -body {
     binary encode hex [xor "Hello" "key"]

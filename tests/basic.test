@@ -1,16 +1,16 @@
 # basic.test --
 #
-# Tests for basic tclperformance package functionality
+# Tests for basic performance package functionality
 
 if {"::tcltest" ni [namespace children]} {
     package require tcltest
 }
 namespace import ::tcltest::*
 
-package require tclperformance
+package require performance
 
 test basic-1.1 {Package can be loaded} -body {
-    package present tclperformance
+    package present performance
 } -result 0.1
 
 test basic-1.2 {xor command exists} -body {
