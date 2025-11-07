@@ -5,14 +5,14 @@
 #include "tcl.h"
 #include "performance.h"
 
-extern int Performance_Init(Tcl_Interp *interp) {
+extern int Tclperformance_Init(Tcl_Interp *interp) {
   // initialize stubs
   if (Tcl_InitStubs(interp, "8.6", 0) == NULL) {
     return TCL_ERROR;
   }
 
   // provide package information
-  if (Tcl_PkgProvide(interp, "Performance", "0.1") != TCL_OK) {
+  if (Tcl_PkgProvide(interp, "tclperformance", "0.1") != TCL_OK) {
     return TCL_ERROR;
   }
 
