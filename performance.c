@@ -5,19 +5,26 @@
 #include "tcl.h"
 #include "performance.h"
 
+#define NS_PREFIX "performance::"                       /* Tcl namespace prefix for command definitions */
+
 extern int Performance_Init(Tcl_Interp *interp) {
   // initialize stubs
   if (Tcl_InitStubs(interp, "8.6", 0) == NULL) {
     return TCL_ERROR;
   }
 
+  // create namespace
+  if (Tcl_CreateNamespace(interp, NS_PREFIX, NULL, NULL) == NULL) {
+    return TCL_ERROR;
+  }
+
+  // Install "xor" command in the performance namespace.
+  Tcl_CreateObjCommand(interp, NS_PREFIX "xor", Tcl_xor_cmd, (ClientData)NULL, (Tcl_CmdDeleteProc*)NULL);
+
   // provide package information
   if (Tcl_PkgProvide(interp, "performance", "0.1") != TCL_OK) {
     return TCL_ERROR;
   }
-
-  // Install "xor" command.
-  Tcl_CreateObjCommand(interp, "xor", Tcl_xor_cmd, (ClientData)NULL, (Tcl_CmdDeleteProc*)NULL);
 
   // fini
   return TCL_OK;
