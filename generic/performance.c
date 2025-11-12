@@ -1,11 +1,10 @@
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include "../config.h"
 #endif
 #include <stdlib.h>
 #include "tcl.h"
 #include "performance.h"
-
-#define NS_PREFIX "performance::"                       /* Tcl namespace prefix for command definitions */
+#define NS_PREFIX PACKAGE_NAME"::"                       /* Tcl namespace prefix for command definitions */
 
 extern int Performance_Init(Tcl_Interp *interp) {
   // initialize stubs
@@ -22,7 +21,7 @@ extern int Performance_Init(Tcl_Interp *interp) {
   Tcl_CreateObjCommand(interp, NS_PREFIX "xor", Tcl_xor_cmd, (ClientData)NULL, (Tcl_CmdDeleteProc*)NULL);
 
   // provide package information
-  if (Tcl_PkgProvide(interp, "performance", "0.1") != TCL_OK) {
+  if (Tcl_PkgProvide(interp, PACKAGE_NAME, PACKAGE_VERSION) != TCL_OK) {
     return TCL_ERROR;
   }
 

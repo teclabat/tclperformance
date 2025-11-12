@@ -65,7 +65,7 @@ TEA_SETUP_COMPILER
 # and PKG_TCL_SOURCES.
 #-----------------------------------------------------------------------
 
-TEA_ADD_SOURCES([performance.c])
+TEA_ADD_SOURCES([generic/performance.c])
 TEA_ADD_HEADERS([])
 TEA_ADD_INCLUDES([])
 TEA_ADD_LIBS([])
@@ -174,7 +174,7 @@ TEA_EXPORT_CONFIG([performance])
 # substituting the AC variables in. Include these here.
 #--------------------------------------------------------------------
 
-AC_CONFIG_FILES([Makefile pkgIndex.tcl performanceConfig.sh])
+AC_CONFIG_FILES([Makefile pkgIndex.tcl])
 
 #--------------------------------------------------------------------
 # Finally, substitute all of the various values into the files
