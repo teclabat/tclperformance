@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "tcl.h"
 #include "performance.h"
-#define NS_PREFIX PACKAGE_NAME"::"                       /* Tcl namespace prefix for command definitions */
+#define NS_PREFIX PACKAGE_NAME"::"
 
 extern int Performance_Init(Tcl_Interp *interp) {
   // initialize stubs
