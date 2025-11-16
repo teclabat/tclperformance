@@ -11,27 +11,22 @@ package require performance
 
 test basic-1.1 {Package can be loaded} -body {
     package present performance
-} -result 0.1
+} -result 1.0.0
 
 test basic-1.2 {xor command exists} -body {
-    llength [info commands xor]
-} -result 1
-
-test basic-1.3 {xor command is a command} -body {
-    # Check xor is a command by seeing if it's in the command list
-    expr {"xor" in [info commands xor]}
+    llength [info commands performance::xor]
 } -result 1
 
 test basic-2.1 {xor with no arguments} -body {
-    xor
+    performance::xor
 } -returnCodes error -result {Invalid command count, use: xor <string> <salt>}
 
 test basic-2.2 {xor with one argument} -body {
-    xor "test"
+    performance::xor "test"
 } -returnCodes error -result {Invalid command count, use: xor <string> <salt>}
 
 test basic-2.3 {xor with too many arguments} -body {
-    xor "test" "key" "extra"
+    performance::xor "test" "key" "extra"
 } -returnCodes error -result {Invalid command count, use: xor <string> <salt>}
 
 ::tcltest::cleanupTests
