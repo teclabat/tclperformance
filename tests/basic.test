@@ -7,10 +7,8 @@ if {"::tcltest" ni [namespace children]} {
 }
 namespace import ::tcltest::*
 
-package require performance
-
 test basic-1.1 {Package can be loaded} -body {
-    package present performance
+    package require performance
 } -result 1.0.0
 
 test basic-1.2 {xor command exists} -body {
@@ -29,7 +27,5 @@ test basic-2.3 {xor with too many arguments} -body {
     performance::xor "test" "key" "extra"
 } -returnCodes error -result {Invalid command count, use: xor <string> <salt>}
 
-::tcltest::cleanupTests
-return
-
-# vim: ft=tcl ts=4 shiftwidth=4
+## cleanup
+cleanupTests
