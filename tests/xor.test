@@ -4,9 +4,8 @@
 
 if {"::tcltest" ni [namespace children]} {
     package require tcltest
+    namespace import ::tcltest::*
 }
-namespace import ::tcltest::*
-
 package require performance
 
 test xor-1.1 {Simple xor operation} -body {

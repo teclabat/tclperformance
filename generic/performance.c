@@ -6,22 +6,19 @@
 
 extern int Performance_Init(Tcl_Interp *interp) {
     // initialize stubs
-    if (Tcl_InitStubs(interp, "8.6", 0) == NULL) {
+    if (Tcl_InitStubs(interp, "8.6", 0) == NULL)
         return TCL_ERROR;
-    }
 
     // create namespace
-    if (Tcl_CreateNamespace(interp, NS_PREFIX, NULL, NULL) == NULL) {
+    if (Tcl_CreateNamespace(interp, NS_PREFIX, NULL, NULL) == NULL)
         return TCL_ERROR;
-    }
 
     // Install "xor" command in the performance namespace.
     Tcl_CreateObjCommand(interp, NS_PREFIX "xor", Tcl_xor_cmd, (ClientData)NULL, (Tcl_CmdDeleteProc*)NULL);
 
     // provide package information
-    if (Tcl_PkgProvide(interp, PACKAGE_NAME, PACKAGE_VERSION) != TCL_OK) {
+    if (Tcl_PkgProvide(interp, PACKAGE_NAME, PACKAGE_VERSION) != TCL_OK)
         return TCL_ERROR;
-    }
 
     // fini
     return TCL_OK;
