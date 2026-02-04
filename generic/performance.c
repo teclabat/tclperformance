@@ -6,7 +6,7 @@
 
 extern int Performance_Init(Tcl_Interp *interp) {
     // initialize stubs
-    if (Tcl_InitStubs(interp, "8.6", 0) == NULL)
+    if (Tcl_InitStubs(interp, "8.6-", 0) == NULL)
         return TCL_ERROR;
 
     // create namespace
@@ -24,28 +24,33 @@ extern int Performance_Init(Tcl_Interp *interp) {
     return TCL_OK;
 }
 
-int Tcl_xor_cmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+/* Tcl 9 lowercase alias for load command compatibility */
+extern int performance_Init(Tcl_Interp *interp) {
+    return Performance_Init(interp);
+}
+
+int Tcl_xor_cmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[]) {
     // reset result
     Tcl_ResetResult(interp);
 
     // check argc
     if (objc != 3) {
-        Tcl_AppendResult(interp, "Invalid command count, use: xor <string> <salt>", 0);
+        Tcl_AppendResult(interp, "Invalid command count, use: xor <string> <salt>", (char *)NULL);
         return(TCL_ERROR);
     }
 
     // get the string to xor
-    int textLen;
+    Tcl_Size textLen;
     const unsigned char* text = Tcl_GetByteArrayFromObj(objv[1], &textLen);
     // get salt to xor with
-    int saltLen;
+    Tcl_Size saltLen;
     const unsigned char* salt = Tcl_GetByteArrayFromObj(objv[2], &saltLen);
     // init result string
     unsigned char* result = malloc(textLen);
 
     // xor the string
-    int si = 0;
-    int ti = 0;
+    Tcl_Size si = 0;
+    Tcl_Size ti = 0;
     for (ti = 0; ti < textLen; ti++) {
         result[ti] = text[ti] ^ salt[si++];
         if (si >= saltLen) si = 0;
